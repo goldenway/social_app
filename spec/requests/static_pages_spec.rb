@@ -5,7 +5,7 @@ describe "Static pages" do
 
 	shared_examples_for "all static pages" do
 		it { should have_selector('title', text: full_title(page_title)) }
-		it { should have_selector('h1',    text: heading)}
+		it { should have_selector('h1',    text: heading) }
 	end
 
 	describe "Home page" do
@@ -37,11 +37,12 @@ describe "Static pages" do
 	describe "Contact page" do
 		before { visit contact_path }
 		let(:page_title) { 'Contact' }
-		let(:heading)	 { 'Contact' }
+		let(:heading)    { 'Contact' }
 
 		it_should_behave_like "all static pages"
 	end
 
+	# checking links
 	it "should have the right links on the layout" do
 		visit root_path
 		click_link "About"
