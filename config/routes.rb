@@ -3,8 +3,9 @@ SocialApp::Application.routes.draw do
   # get "static_pages/help"
   # get "static_pages/about"
   # get "static_pages/contact"
+  # get "users/new"
 
-  get "users/new"
+  resources :users        # забезпечує всі RESTful іменовані маршрути для users
 
   root to: 'static_pages#home'
   match '/help',    to: 'static_pages#help'
