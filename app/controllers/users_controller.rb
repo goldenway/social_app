@@ -13,8 +13,9 @@ class UsersController < ApplicationController
 		# @user = User.new(name: "..", email: "..", ..)
 
 		if @user.save
+			sign_in @user
 			flash[:success] = "Welcome to the Social App!"
-			redirect_to user_path(@user)
+			redirect_to @user
 		else
 			render 'new'
 		end

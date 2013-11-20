@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
 	before_save { email.downcase! }
 	# the same as:
 	# before_save { |user| user.email = email.downcase }
+	before_save :create_remember_token
 
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	validates :name,	 presence: true, length: { maximum: 50 }
@@ -24,4 +25,12 @@ class User < ActiveRecord::Base
 						 uniqueness: { case_sensitive: false }
 	validates :password, length: { minimum: 6 }
 	validates :password_confirmation, presence: true
+
+	private
+
+		def create_remember_token
+			# SecureRandom.urlsafe_base64 возвращает случайную строку длиной в
+			# 16 символов составленную из знаков A–Z, a–z, 0–9, “-” и “_”
+			self.remember_token = SecureRandom.urlsafe_base64
+		end
 end
