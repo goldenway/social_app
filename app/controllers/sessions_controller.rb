@@ -3,9 +3,12 @@ class SessionsController < ApplicationController
 	end
 
 	def create
-		user = User.find_by_email(params[:session][:email].downcase)
+		# use params[:email] / params[:password]					 -> form_tag
+		# use params[:session][:email] / params[:session][:password] -> form_for
+		# form is located in app/views/sessions/new.html.erb
+		user = User.find_by_email(params[:email].downcase)
 
-		if user && user.authenticate(params[:session][:password])
+		if user && user.authenticate(params[:password])
 			sign_in user
 			redirect_to user
 		else

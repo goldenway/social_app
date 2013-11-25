@@ -44,17 +44,6 @@ describe "Static pages" do
 
 	# checking links
 	it "should have the right links on the layout" do
-		visit root_path
-		click_link "About"
-		page.should have_selector 'title', text: full_title('About Us')
-		click_link "Help"
-		page.should have_selector 'title', text: full_title('Help')
-		click_link "Contact"
-		page.should have_selector 'title', text: full_title('Contact')
-		click_link "Home"
-		click_link "Sign up now!"
-		page.should have_selector 'title', text: full_title('Sign up')
-		click_link "social app"
-		page.should have_selector 'title', text: 'Social App'
+		should_have_correct_static_pages_links # defined in spec/support/utilities.rb
 	end
 end
