@@ -17,21 +17,16 @@ def should_have_correct_static_pages_links
 	page.should have_selector 'title', text: 'Social App'
 end
 
-# methods for user pages spec
-
-def fill_in_form_with_valid_information
-	fill_in "Name", 		with: "Example User"
-	fill_in "Email",		with: "user@example.com"
-	fill_in "Password",		with: "foobar"
-	fill_in "Confirmation",	with: "foobar"
-end
-
 # methods for authentication pages spec
 
-def valid_signin(user)
+def sign_in(user)
+	visit signin_path
 	fill_in "Email",    with: user.email
 	fill_in "Password", with: user.password
 	click_button "Sign in"
+
+	# filling in the form doesn’t work when not using Capybara
+	cookies[:remember_token] = user.remember_token
 end
 
 RSpec::Matchers.define :have_error_message do |message|
