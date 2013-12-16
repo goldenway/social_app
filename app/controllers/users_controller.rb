@@ -11,6 +11,9 @@ class UsersController < ApplicationController
 
 	def show
 		@user = User.find(params[:id])
+		@microposts = @user.microposts.paginate(page: params[:page], per_page: 6)
+		# when changing :per_page count, change it in static_pages_spec.rb
+		# "pagination in user's feed"
 	end
 
 	def new
@@ -51,19 +54,6 @@ class UsersController < ApplicationController
 	end
 
 	private
-
-		def signed_in_user
-			unless signed_in?
-				store_location
-
-				redirect_to signin_url, notice: "Please sign in."
-				# the same as
-				# flash[:notice] = "Please sign in."
-				# redirect_to signin_url
-				# Аналогичная конструкция работает для ключа :error, но не для :success
-			end
-		end
-
 		def unsigned_user
 			if signed_in?
 				redirect_to root_path, notice: "You already have an account"

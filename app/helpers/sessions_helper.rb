@@ -20,6 +20,18 @@ module SessionsHelper
 		user == current_user
 	end
 
+	def signed_in_user
+		unless signed_in?
+			store_location
+
+			redirect_to signin_url, notice: "Please sign in."
+			# the same as
+			# flash[:notice] = "Please sign in."
+			# redirect_to signin_url
+			# Аналогичная конструкция работает для ключа :error, но не для :success
+		end
+	end
+
 	def sign_out
 		self.current_user = nil
 		cookies.delete(:remember_token)
