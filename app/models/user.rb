@@ -17,6 +17,17 @@ class User < ActiveRecord::Base
 	has_secure_password
 	has_many :microposts, dependent: :destroy
 
+	has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+	has_many :followed_users, through: :relationships, source: :followed
+	# використовуємо source, бо ми назвали followed_users замість "followeds"
+	# (від followed_id в таблиці relationships)
+
+	has_many :reverse_relationships, foreign_key: "followed_id",
+									 class_name: "Relationship",
+									 dependent: :destroy
+	has_many :followers, through: :reverse_relationships, source: :follower
+	# можна без source, бо follower_id існує в таблиці reverse_relationships
+
 	before_save { email.downcase! }
 	# the same as:
 	# before_save { |user| user.email = email.downcase }
@@ -30,7 +41,22 @@ class User < ActiveRecord::Base
 	validates :password_confirmation, presence: true
 
 	def feed
-		Micropost.where("user_id = ?", id)
+		# Micropost.where("user_id = ?", id) # пости тільки самого current_user'a
+		Micropost.from_users_followed_by(self) # пости юзера і всіх його followed users
+	end
+
+	def following?(other_user)
+		relationships.find_by_followed_id(other_user.id)
+	end
+
+	def follow!(other_user)
+		relationships.create!(followed_id: other_user.id)
+		# the same as
+		# self.relationships.create!(followed_id: other_user.id)
+	end
+
+	def unfollow!(other_user)
+		relationships.find_by_followed_id(other_user.id).destroy
 	end
 
 	private

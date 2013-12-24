@@ -6,6 +6,9 @@ class CreateMicroposts < ActiveRecord::Migration
 
       t.timestamps
     end
+
     add_index :microposts, [:user_id, :created_at]
+    # якшо масив => multiple key index
+    # значит, что Active Record использует оба ключа одновременно
   end
 end

@@ -26,11 +26,17 @@ describe "Static pages" do
 				visit root_path
 			end
 
-			describe "microposts count" do
-				it { should have_content("#{user.microposts.count}") }
-				it "should have plural form" do
-					page.should have_content('microposts')
+			it { should have_content('2 microposts') }
+
+			describe "follower/folowing counts" do
+				let(:other_user) { FactoryGirl.create(:user) }
+				before do
+					other_user.follow!(user)
+					visit root_path
 				end
+
+				it { should have_link("0 following", href: following_user_path(user)) }
+				it { should have_link("1 followers", href: followers_user_path(user)) }
 			end
 
 			it "should render the user's feed" do
@@ -78,8 +84,7 @@ describe "Static pages" do
 		it_should_behave_like "all static pages"
 	end
 
-	# checking links
-	it "should have the right links on the layout" do
-		should_have_correct_static_pages_links # defined in spec/support/utilities.rb
+	describe "should have the right links on the layout" do
+		it { should_have_correct_static_pages_links } # defined in spec/support/utilities.rb
 	end
 end
